@@ -8,4 +8,4 @@ app.get("/", (req, res) => {
 
 const PORT = 3000;
 
-app.listenerCount(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
