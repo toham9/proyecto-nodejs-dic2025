@@ -2,12 +2,15 @@ import { db } from "./firebase.js";
 
 import {
   collection,
+  getDocs,
   doc,
   getDoc,
-  getDocs,
   addDoc,
-  updateDoc,
+  setDoc,
   deleteDoc,
+  updateDoc,
+  query,
+  where
 } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
@@ -31,6 +34,23 @@ export const getProductById = async (id) => {
   }
 };
 
+export const getProductsByCategory = async (category) => {
+  try {
+    const q = query(
+      productsCollection,
+      where("categories", "array-contains", category)
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const createProduct = async (data) => {
   try {
     const docRef = await addDoc(productsCollection, data);
@@ -41,7 +61,6 @@ export const createProduct = async (data) => {
 };
 
 export const updateProduct = async (id, productData) => {
-  console.log(id, productData);
   try {
     const productRef = doc(productsCollection, id);
     const snapshot = await getDoc(productRef);
@@ -50,6 +69,23 @@ export const updateProduct = async (id, productData) => {
       return false;
     }
 
+    await setDoc(productRef, productData);
+    return { id, ...productData };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updatePatchProduct = async (id, productData) => {
+  try {
+    const productRef = doc(productsCollection, id);
+    const snapshot = await getDoc(productRef);
+
+    if (!snapshot.exists()) {
+      return false;
+    }
+
+    // await setDoc(productRef, productData, { merge: true });
     await updateDoc(productRef, productData);
     return { id, ...productData };
   } catch (error) {
