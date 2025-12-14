@@ -66,13 +66,20 @@ export const updateProduct = async (id, productData) => {
     const snapshot = await getDoc(productRef);
 
     if (!snapshot.exists()) {
-      return false;
+      return null;
     }
 
-    await setDoc(productRef, productData);
-    return { id, ...productData };
+    await updateDoc(productRef, productData);
+    
+    return {
+      id: snapshot.id,
+      ...snapshot.data(),
+      ...productData
+    };
+  
   } catch (error) {
     console.error(error);
+    return null;
   }
 };
 
@@ -85,7 +92,6 @@ export const updatePatchProduct = async (id, productData) => {
       return false;
     }
 
-    // await setDoc(productRef, productData, { merge: true });
     await updateDoc(productRef, productData);
     return { id, ...productData };
   } catch (error) {

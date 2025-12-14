@@ -27,16 +27,23 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, price, categories } = req.body;
+ 
+  const dataToUpdate = Object.fromEntries(
+    Object.entries(req.body).filter(([_, value]) => value !== undefined)
+  );
 
-  const updatedProduct = await model.updateProduct(id, { name, price, categories });
+  const updatedProduct = await model.updateProduct(id, dataToUpdate);
   
   if (!updatedProduct) {
     return res.status(404).json({ error: "Not Found" });
   }
-  
-  res.json(updatedProduct);
+
+  return res.json({
+    message: "Product updated",
+    product: updatedProduct
+  });
 };
+
 
 
 export const deleteProduct = async (req, res) => {

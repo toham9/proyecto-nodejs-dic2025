@@ -11,13 +11,17 @@ app.get("/", (req, res) => {
     res.send("Bienvenidos a nuestra API REST");
 });
 
-app.use("/api", authRouter);
+// auth (pública)
+app.use("/api/auth", authRouter);
 
-app.use(auth);
+// products (protegida)
+app.use("/api/products", auth, productsRouter);
 
-app.get("/", auth, (req, res) => {
-  res.send("API ...");
-});
+//app.use("/api", authRouter);
+
+//app.get("/", auth, (req, res) => {
+//  res.send("API ...");
+//});
 
 //const PORT = 3000;
 

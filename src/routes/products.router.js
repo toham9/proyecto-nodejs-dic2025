@@ -10,10 +10,10 @@ import {
   deleteProduct,
   } from "../controllers/products.controller.js";
 
-router.get("/products", getAllProducts);
-router.get("/products/:id", getProductById);
-router.post("/products", createProduct);
-router.put("/products/:id", updateProduct);
-router.delete("/products/:id", deleteProduct);
+router.get("/", getAllProducts);
+router.get("/:id", getProductById);
+router.post("/", createProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
